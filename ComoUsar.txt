@@ -1,5 +1,4 @@
-A lib foi escrita na IDE IAR - Embedded. Adiciona eo arquivo o arquivo oper.s43 em seu projeto e o exporte. O exemplo de como
-fazer pode ser verificado no arquivo asm.s43.
+A lib foi escrita na IDE IAR - Embedded. O arquivo oper.s43 deverá ser adicionado no projeto e em seguida ser declarado. O exemplo de como fazer pode ser verificado no arquivo asm.s43.
 
 Nesse programa as rotinas de soma e subtração estão sendo chamadas.
 
