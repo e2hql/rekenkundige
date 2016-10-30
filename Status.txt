@@ -1,0 +1,5 @@
+Biblioteca em desenvolvimento.
+
+OPERAÇÕES DISPONIVEIS ATÉ O MOMENTO
+
+SOMA
