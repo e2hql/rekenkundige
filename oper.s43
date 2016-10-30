@@ -21,7 +21,7 @@
 #include "msp430g2553.h"
 ;----------------------------------------------------------------------------------------------
         NAME   OPER
-        PUBLIC SOMA_OPER, SUB_OPER
+        PUBLIC SOMA_OPER, SUB_OPER, MULT_OPER, DIV_OPER
         RSEG   CODE           
 ;----------------------------------------------------------------------------------------------
 SOMA_OPER ; REALIZA O CALCULO DE SOMA
