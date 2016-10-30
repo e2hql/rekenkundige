@@ -1,0 +1,43 @@
+;----------------------------------------------------------------------------------------------
+#include <msp430G2553.h>
+;----------------------------------------------------------------------------------------------
+;----------------------------------------------------------------------------------------------
+     EXTERN      SOMA_OPER, SUB_OPER, MULT_OPER, DIV_OPER
+     RSEG        CSTACK
+;----------------------------------------------------------------------------------------------
+     RSEG        CODE   
+;----------------------------------------------------------------------------------------------
+RESET            mov.w       #SFE(CSTACK), SP 
+STOPWDT          mov.w       #WDTPW+WDTHOLD,&WDTCTL
+;----------------------------------------------------------------------------------------------
+INIT:            mov.w       #00000h,R4 ; LIMPEZA DO REGISTRADOR
+                 mov.w       #00000h,R5 ; LIMPEZA DO REGISTRADOR
+                 mov.w       #00000h,R6 ; LIMPEZA DO REGISTRADOR
+                 mov.w       #00000h,R7 ; LIMPEZA DO REGISTRADOR
+                 mov.w       #00000h,R8 ; LIMPEZA DO REGISTRADOR
+                 mov.w       #00000h,R9 ; LIMPEZA DO REGISTRADOR
+                 mov.w       #00000h,R10 ; LIMPEZA DO REGISTRADOR
+                 mov.w       #00000h,R11 ; LIMPEZA DO REGISTRADOR
+                 mov.w       #00000h,R12 ; LIMPEZA DO REGISTRADOR
+                 mov.w       #00000h,R13 ; LIMPEZA DO REGISTRADOR
+                 mov.w       #00000h,R14 ; LIMPEZA DO REGISTRADOR
+                 mov.w       #00000h,R15 ; LIMPEZA DO REGISTRADOR
+                 nop
+                 mov.b       #002h,R4
+                 mov.b       #002h,R5
+                 nop
+                 call        #SOMA_OPER ; VERIFIQUE O VALOR DO REGISTRADOR R6
+                 mov.w       #00008h,R4
+                 mov.w       #00002h,R5
+                 call        #SUB_OPER ; VERIFIQUE O VALOR DO REGISTRADOR R6
+                 nop
+EXIT:            nop
+;---------------------------------------
+                 jmp         $
+;----------------------------------------------------------------------------------------------
+                 COMMON      INTVEC
+;----------------------------------------------------------------------------------------------
+                 ORG     RESET_VECTOR
+                 DW      RESET
+                 END
+;----------------------------------------------------------------------------------------------
