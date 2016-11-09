@@ -40,7 +40,7 @@ SUB_OPER ; REALIZA O CALCULO DE SUBTRAÇÃO
 ;----------------------------------------------------------------------------------------------
 MULT_OPER ; REALIZA O CALCULO DE MULTIPLICAÇÃO
 ;----------------------------------------------------------------------------------------------         
-        nop
+        call      #R4_IS_8BIT
         ret
 ;----------------------------------------------------------------------------------------------
 ;----------------------------------------------------------------------------------------------
@@ -70,6 +70,37 @@ MSB ; REALIZA A ROTAÇÃO PARA A DIREITA AFIM DE OBTER O BYTE MAIS SIGNIFICATIVO
         mov.b       R4,R4
         nop
         ret 
+;----------------------------------------------------------------------------------------------
+R4_IS_8BIT ; INFORMA AO REGISTRADOR DE STATUS R6 SE O CONTEUDO DOS REGISTRADORES SAO DE 8 BITS
+           ; SE R6 = 00001h REGISTRADOR R4 CONTEM UM VALOR DE 8 BITS
+           ; SE R6 = 00000h REGISTRADOR R4 NÃO CONTEM UM VALOR DE 8 BITS
+;----------------------------------------------------------------------------------------------
+          push.w      R4 ; ADICIONA VALOR INFORMADO A PILHA
+          rra         R4
+          rra         R4
+          rra         R4
+          rra         R4
+          rra         R4
+          rra         R4
+          rra         R4
+          rra         R4
+          mov.b       R4,R4
+          BIT         #1,R4
+          jeq         IS_8BIT                          
+IS_16BIT: mov.w       #00000h,R6
+          jmp         EXIT_R4_IS_8BIT          
+IS_8BIT:  mov.w       #00001h,R6
+EXIT_R4_IS_8BIT:
+          pop.w       R4  ; RESTAURA O VALOR
+          ret  
+;----------------------------------------------------------------------------------------------
+;----------------------------------------------------------------------------------------------
+R5_IS_8BIT ; INFORMA AO REGISTRADOR DE STATUS R6 SE O CONTEUDO DOS REGISTRADORES SAO DE 8 BITS
+           ; SE R6 = 000C3h REGISTRADOR R4 E R5 CONTEM UM VALOR DE 8 BITS
+           ; SE R6 = 00080h REGISTRADOR R4 CONTEM UM VALOR DE 8 BITS E R5 NÃO CONTEM UM VALOR DE 8 BITS
+;----------------------------------------------------------------------------------------------
+        nop
+        ret  
 ;----------------------------------------------------------------------------------------------
 ;----------------------------------------------------------------------------------------------
         END  
