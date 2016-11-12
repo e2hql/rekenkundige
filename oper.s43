@@ -72,8 +72,8 @@ MSB ; REALIZA A ROTAÇÃO PARA A DIREITA AFIM DE OBTER O BYTE MAIS SIGNIFICATIVO
         ret 
 ;----------------------------------------------------------------------------------------------
 R4_IS_8BIT ; INFORMA AO REGISTRADOR DE STATUS R6 SE O CONTEUDO DOS REGISTRADORES SAO DE 8 BITS
-           ; SE R6 = 00001h REGISTRADOR R4 CONTEM UM VALOR DE 8 BITS
-           ; SE R6 = 00000h REGISTRADOR R4 NÃO CONTEM UM VALOR DE 8 BITS
+           ; SE R7 = 00001h REGISTRADOR R4 CONTEM UM VALOR DE 8 BITS
+           ; SE R7 = 00000h REGISTRADOR R4 NÃO CONTEM UM VALOR DE 8 BITS
 ;----------------------------------------------------------------------------------------------
           push.w      R4 ; ADICIONA VALOR INFORMADO A PILHA
           rra         R4
@@ -85,22 +85,52 @@ R4_IS_8BIT ; INFORMA AO REGISTRADOR DE STATUS R6 SE O CONTEUDO DOS REGISTRADORES
           rra         R4
           rra         R4
           mov.b       R4,R4
-          BIT         #1,R4
-          jeq         IS_8BIT                          
-IS_16BIT: mov.w       #00000h,R6
-          jmp         EXIT_R4_IS_8BIT          
-IS_8BIT:  mov.w       #00001h,R6
-EXIT_R4_IS_8BIT:
-          pop.w       R4  ; RESTAURA O VALOR
+          cmp.b       #0,R4
+          jnz         R4NOT_8BIT
+R4IS_8BIT:  
+          mov.w     #00001h,R7
+          jmp       EXIT_R4_TST     
+R4NOT_8BIT: 
+          mov.w     #00000h,R7          
+EXIT_R4_TST:         
+          pop.w     R4  ; RESTAURA O VALOR
           ret  
 ;----------------------------------------------------------------------------------------------
 ;----------------------------------------------------------------------------------------------
 R5_IS_8BIT ; INFORMA AO REGISTRADOR DE STATUS R6 SE O CONTEUDO DOS REGISTRADORES SAO DE 8 BITS
-           ; SE R6 = 000C3h REGISTRADOR R4 E R5 CONTEM UM VALOR DE 8 BITS
-           ; SE R6 = 00080h REGISTRADOR R4 CONTEM UM VALOR DE 8 BITS E R5 NÃO CONTEM UM VALOR DE 8 BITS
+           ; SE R7 = 000C3h REGISTRADOR R4 E R5 CONTEM UM VALOR DE 8 BITS
+           ; SE R7 = 00079h REGISTRADOR R4 NAO CONTEM VALOR VALOR DE 8 BITS MAS REGISTRADOR R5 CONTEM
+           ; SE R7 = 00080h REGISTRADOR R4 CONTEM UM VALOR DE 8 BITS MAS REGISTRADOR R5 NÃO CONTEM 
+           ; SE R7 = 00081h REGISTRADOR R4 NÃO CONTEM UM VALOR DE 8 BITS E R5 NÃO CONTEM UM VALOR DE 8 BITS
 ;----------------------------------------------------------------------------------------------
-        nop
-        ret  
+          push.w      R5
+          rra         R5
+          rra         R5
+          rra         R5
+          rra         R5
+          rra         R5
+          rra         R5
+          rra         R5
+          rra         R5
+          mov.b       R5,R5
+          cmp.b       #0,R5
+          jnz         R5NOT_8BIT
+R5IS_8BIT:
+          cmp.b       #00001h,R7
+          jnz         R4NBIT
+R4SBIT:   mov.w       #000C3h,R7
+          jmp         EXIT_R5_TST        
+R4NBIT:   mov.w       #00079h,R7          
+          jmp         EXIT_R5_TST
+R5NOT_8BIT:
+          cmp.b       #00001h,R7
+          jnz         _R4NBIT
+_R4SBIT:  mov.w       #00080h,R7
+          jmp         EXIT_R5_TST
+_R4NBIT:  mov.w       #00081h,R7 
+EXIT_R5_TST:
+          pop.w       R5 ; RESTAURA O VALOR
+          ret  
 ;----------------------------------------------------------------------------------------------
 ;----------------------------------------------------------------------------------------------
 VALIDAR_VAR ; VALIDA OS VALORES INFORMADOS NOS REGISTRADORES PARA A REALIZAÇÃO DA OPERAÇÃO
