@@ -40,8 +40,27 @@ SUB_OPER ; REALIZA O CALCULO DE SUBTRAÇÃO
 ;----------------------------------------------------------------------------------------------
 MULT_OPER ; REALIZA O CALCULO DE MULTIPLICAÇÃO
 ;----------------------------------------------------------------------------------------------         
-        call      #VALIDAR_VAR
-        ret
+           push      R7         ; ISOLA O VALOR ORIGINAL ANTES DE INICIAR AS VERIFICAÇÕES
+           call      #VALIDAR_VAR
+           cmp.b     #000C3h,R7
+           jnz       NCALC
+CALC:      nop
+           jmp       EXIT_MULT
+NCALC:                          ; EXISTE ALGUM TERMO INFORMADO QUE NÃO PODE SER CALCULADO POIS ULTRAPASSA O LIMITE DE 8 BITS 
+VERTALL:   cmp.b     00081h,R7
+           jnz       VER14BIT
+           mov.w     #00000h,R4
+           mov.w     #00000h,R5
+           jmp       EXIT_MULT
+VER14BIT:  cmp.b     #00079h,R7 ; VERIFICA SE O PRIMEIRO TERMO ESTA OK. NO CASO O VALOR VERIFICADO DE R4
+           jnz       NOT79
+           mov.w     #00000h,R4
+           jmp       EXIT_MULT
+NOT79:     cmp.b     #00080h,R7
+           jnz       EXIT_MULT 
+           mov.w     #00000h,R5                
+EXIT_MULT: pop       R7
+           ret
 ;----------------------------------------------------------------------------------------------
 ;----------------------------------------------------------------------------------------------
 DIV_OPER ; REALIZA O CALCULO DE DIVISÃO
@@ -135,9 +154,9 @@ EXIT_R5_TST:
 ;----------------------------------------------------------------------------------------------
 VALIDAR_VAR ; VALIDA OS VALORES INFORMADOS NOS REGISTRADORES PARA A REALIZAÇÃO DA OPERAÇÃO
 ;----------------------------------------------------------------------------------------------
-        call      #R4_IS_8BIT ; VALIDA O VALOR INFORMADO NO REGISTRADOR R4
-        call      #R5_IS_8BIT ; VALIDA O VALOR INFORMADO NO REGISTRADOR R5
-        ret
+           call      #R4_IS_8BIT ; VALIDA O VALOR INFORMADO NO REGISTRADOR R4
+           call      #R5_IS_8BIT ; VALIDA O VALOR INFORMADO NO REGISTRADOR R5
+           ret
 ;----------------------------------------------------------------------------------------------         
 ;----------------------------------------------------------------------------------------------
         END  
