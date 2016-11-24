@@ -10,7 +10,30 @@
 RESET            mov.w       #SFE(CSTACK), SP 
 STOPWDT          mov.w       #WDTPW+WDTHOLD,&WDTCTL
 ;----------------------------------------------------------------------------------------------
-INIT:            mov.w       #00000h,R4 ; LIMPEZA DO REGISTRADOR
+INIT:            call        #CLEAR_REGS
+                 //EXEMPLO PASSANDO UM VALOR DE 8 BITS NO R4 E DE 16 NO R5
+                 //A ROTINA IRÁ DEVOLVER ZERO NO R5 POR NÃO SER DE 8BITS E 
+                 //NÃO IRÁ EFETUAR O CALCULO
+                 mov.w       #000FFh,R4
+                 mov.w       #00CFFh,R5
+                 call        #MULT_OPER
+                 nop
+NOVO_EXEMPLO:    //
+                 //EXEMPLO PASSANDO UM VALOR DE 16 BITS NO R4 E DE 8 NO R5
+                 //A ROTINA IRÁ DEVOLVER ZERO NO R4 POR NÃO SER DE 8BITS E 
+                 //NÃO IRÁ EFETUAR O CALCULO
+                 call        #CLEAR_REGS
+                 mov.w       #001FFh,R4
+                 mov.w       #000FFh,R5
+                 call        #MULT_OPER
+                 nop
+                 //
+                 jmp         $
+;----------------------------------------------------------------------------------------------
+;----------------------------------------------------------------------------------------------
+CLEAR_REGS
+;----------------------------------------------------------------------------------------------
+                 mov.w       #00000h,R4 ; LIMPEZA DO REGISTRADOR
                  mov.w       #00000h,R5 ; LIMPEZA DO REGISTRADOR
                  mov.w       #00000h,R6 ; LIMPEZA DO REGISTRADOR
                  mov.w       #00000h,R7 ; LIMPEZA DO REGISTRADOR
@@ -22,18 +45,7 @@ INIT:            mov.w       #00000h,R4 ; LIMPEZA DO REGISTRADOR
                  mov.w       #00000h,R13 ; LIMPEZA DO REGISTRADOR
                  mov.w       #00000h,R14 ; LIMPEZA DO REGISTRADOR
                  mov.w       #00000h,R15 ; LIMPEZA DO REGISTRADOR
-                 nop
-                 mov.b       #002h,R4
-                 mov.b       #002h,R5
-                 nop
-                 call        #SOMA_OPER ; VERIFIQUE O VALOR DO REGISTRADOR R6
-                 mov.w       #00008h,R4
-                 mov.w       #00002h,R5
-                 call        #SUB_OPER ; VERIFIQUE O VALOR DO REGISTRADOR R6
-                 nop
-EXIT:            nop
-;---------------------------------------
-                 jmp         $
+                 ret
 ;----------------------------------------------------------------------------------------------
                  COMMON      INTVEC
 ;----------------------------------------------------------------------------------------------
@@ -41,3 +53,4 @@ EXIT:            nop
                  DW      RESET
                  END
 ;----------------------------------------------------------------------------------------------
+
