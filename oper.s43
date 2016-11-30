@@ -44,10 +44,10 @@ MULT_OPER ; REALIZA O CALCULO DE MULTIPLICAÇÃO
            call      #VALIDAR_VAR
            cmp.b     #000C3h,R7
            jnz       NCALC
-CALC:      nop
+CALC:      call      #PROCESS_MULT
            jmp       EXIT_MULT
 NCALC:                          ; EXISTE ALGUM TERMO INFORMADO QUE NÃO PODE SER CALCULADO POIS ULTRAPASSA O LIMITE DE 8 BITS 
-VERTALL:   cmp.b     00081h,R7
+VERTALL:   cmp.b     #00081h,R7
            jnz       VER14BIT
            mov.w     #00000h,R4
            mov.w     #00000h,R5
@@ -157,7 +157,44 @@ VALIDAR_VAR ; VALIDA OS VALORES INFORMADOS NOS REGISTRADORES PARA A REALIZAÇÃO D
            call      #R4_IS_8BIT ; VALIDA O VALOR INFORMADO NO REGISTRADOR R4
            call      #R5_IS_8BIT ; VALIDA O VALOR INFORMADO NO REGISTRADOR R5
            ret
-;----------------------------------------------------------------------------------------------         
+;----------------------------------------------------------------------------------------------
+;----------------------------------------------------------------------------------------------
+PROCESS_MULT
+;----------------------------------------------------------------------------------------------
+ALOCACAO:   push.w    R8  ; PARA DAR SUPORTE NA OPERACAO
+            push.w    R9  ; PARA SUPORTE NA OPERACAO
+            push.w    R10 ; PARA SUPORTE NA OPERACAO
+            push.b    &0x0200 ; PARA OCUPAR VALOR DA PRIMEIRA MULTIPLICACAO
+            push.b    &0x0202 ; PARA OCUPAR VALOR DA SEGUNDA MULTIPLICACAO
+            push.b    &0x0204 ; PARA OCUPAR VALOR DA TERCEIRA MULTIPLICACAO
+            push.b    &0x0206 ; PARA OCUPAR VALOR DA QUARTA MULTIPLICACAO
+            push.b    &0x020A ; PARA OCUPAR VALOR DA QUINTA MULTIPLICACAO
+            push.b    &0x020C ; PARA OCUPAR VALOR DA SEXTA MULTIPLICACAO
+            push.b    &0x020F ; PARA OCUPAR VALOR DA SETIMA MULTIPLICACAO
+            push.b    &0x0210 ; PARA OCUPAR VALOR DA OITAVA MULTIPLICACAO
+            mov.w     #0h,R8
+            mov.w     #0h,R9
+            mov.w     #0h,R10
+INIT_CALCM: mov.b     R4,R8
+            mov.b     R5,R9
+            // EM CONSTRUCAO..............
+            nop
+            rra       R8
+            nop
+RESTAURAR:  pop.b     &0x0210 ; RESTAURANDO VALOR
+            pop.b     &0x020F ; RESTAURANDO VALOR
+            pop.b     &0x020C ; RESTAURANDO VALOR
+            pop.b     &0x020A ; RESTAURANDO VALOR
+            pop.b     &0x0206 ; RESTAURANDO VALOR
+            pop.b     &0x0204 ; RESTAURANDO VALOR
+            pop.b     &0x0202 ; RESTAURANDO VALOR
+            pop.b     &0x0200 ; RESTAURANDO VALOR
+            pop.w     R10 ; RESTAURANDO VALOR DE REGISTRADOR
+            pop.w     R9  ; RESTAURANDO VALOR DE REGISTRADOR
+            pop.w     R8  ; RESTAURANDO VALOR DE REGISTRADOR
+            nop
+            ret
+;----------------------------------------------------------------------------------------------
 ;----------------------------------------------------------------------------------------------
         END  
 ;----------------------------------------------------------------------------------------------
