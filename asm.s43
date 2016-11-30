@@ -28,6 +28,26 @@ NOVO_EXEMPLO:    //
                  call        #MULT_OPER
                  nop
                  //
+                 //EXEMPLO PASSANDO UM VALOR DE 16 BITS NO R4 E DE 16 NO R5
+                 //A ROTINA IRÁ DEVOLVER ZERO NO R4 E NO R5 POR NÃO SER DE 8BITS E 
+                 //NÃO IRÁ EFETUAR O CALCULO
+                 call        #CLEAR_REGS
+                 mov.w       #001FFh,R4
+                 mov.w       #001FFh,R5
+                 call        #MULT_OPER
+                 nop
+                 //VERIFICAR SE OS VALORES INFORMADOS NOS REGISTRADORES R8,R9 E R10
+                 //SERÃO RESTAURADOS COM A CHAMADA DA OPERAÇAO
+                 //VERIFICAR EM DEBUG
+                 call        #CLEAR_REGS
+                 mov.w       #00002h,R8
+                 mov.w       #00003h,R9
+                 mov.w       #00004h,R10
+                 mov.w       #000AFh,R4
+                 mov.w       #000FFh,R5
+                 call        #MULT_OPER
+                 nop
+                 //
                  jmp         $
 ;----------------------------------------------------------------------------------------------
 ;----------------------------------------------------------------------------------------------
